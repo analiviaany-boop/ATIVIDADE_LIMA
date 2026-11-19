@@ -1,0 +1,119 @@
+<html>
+<head>
+	<title>Check</title>
+</head>
+
+<body bgcolor="black">
+
+<font face="Garamond" color="grey" size="5">
+
+<br><br>
+<!-- Oráculo de Citações Góticas -->
+<table border="1" bordercolor="#4a0e17" bgcolor="#0d0d0d" align="center" width="70%" cellpadding="12" cellspacing="0">
+  <tr>
+    <td align="center">
+      <font face="Garamond" color="#c5a059" size="4">
+        <b>🕯️ O ORÁCULO DAS SOMBRAS 🕯️</b>
+      </font>
+      <br><br>
+      
+      <!-- Área onde a citação vai aparecer -->
+      <font face="Garamond" color="#e2dfd8" size="4">
+        <span id="textoCitacao"><i>"Clique no botão abaixo para ouvir um sussurro do além..."</i></span>
+      </font>
+      
+      <br><br>
+      
+      <!-- Botão para sortear -->
+      <button onclick="sortearCitacao()" style="background-color: #2d0a0f; color: #c5a059; border: 1px solid #4a0e17; padding: 8px 16px; font-family: Garamond, serif; font-size: 16px; cursor: pointer;">
+        🦇 Invocar Citação
+      </button>
+    </td>
+  </tr>
+</table>
+
+<script>
+  // Lista de citações clássicas dos seus 8 filmes
+  var citacoesGoticas = [
+    '"Ouça-os, as crianças da noite. Que música incrível eles fazem!" — Drácula de Bram Stoker (1992)',
+    '"Sangue é vida... e deve ser meu!" — Nosferatu (1922)',
+    '"O vilarejo de Sleepy Hollow parece envolvido por um pesadelo sem fim." — Sleepy Hollow (1999)',
+    '"Fantasmas são reais. Eles existem dentro de nós... e às vezes nos guardam." — Crimson Peak (2015)',
+    '"Eu vou lhe dar a escolha que eu nunca tive..." — Entrevista com o Vampiro (1994)',
+    '"Se eu tocar em uma vela, sei que não sentirei dor... mas meu coração continua partido." — A Noiva Cadáver (2005)',
+    '"Minhas roupas são escuras, mas minha alma é pura diversão!" — Elvira: A Rainha das Trevas (1988)',
+    '"Não há refúgio contra o abraço das sombras e do destino." — Carmilla / The Vampire Lovers (1970)',
+    '"A morte não é o fim, apenas uma mudança de trajes para a eternidade."',
+    '"Certos segredos só revelam sua verdade na escuridão mais profunda."'
+  ];
+
+  function sortearCitacao() {
+    // Escolhe uma citação aleatória da lista
+    var indice = Math.floor(Math.random() * citacoesGoticas.length);
+    var citacaoEscolhida = citacoesGoticas[indice];
+    
+    // Atualiza o texto na tabela
+    document.getElementById("textoCitacao").innerHTML = '<i>' + citacaoEscolhida + '</i>';
+  }
+</script>
+
+<br><br><br>
+
+<h3 align="center"><font face="Garamond" color="#c5a059">Marque as suas relíquias assistidas:</font></h3>
+
+<form id="gothicChecklist">
+  <table border="0" align="center" cellpadding="5">
+    <tr>
+      <td><input type="checkbox" id="f1" onchange="salvarCheck(this)"></td>
+      <td><font face="Garamond" color="#e2dfd8" size="4"><label for="f1">Drácula de Bram Stoker (1992)</label></font></td>
+    </tr>
+    <tr>
+      <td><input type="checkbox" id="f2" onchange="salvarCheck(this)"></td>
+      <td><font face="Garamond" color="#e2dfd8" size="4"><label for="f2">Nosferatu (1922)</label></font></td>
+    </tr>
+    <tr>
+      <td><input type="checkbox" id="f3" onchange="salvarCheck(this)"></td>
+      <td><font face="Garamond" color="#e2dfd8" size="4"><label for="f3">Sleepy Hollow (1999)</label></font></td>
+    </tr>
+    <tr>
+      <td><input type="checkbox" id="f4" onchange="salvarCheck(this)"></td>
+      <td><font face="Garamond" color="#e2dfd8" size="4"><label for="f4">Crimson Peak (2015)</label></font></td>
+    </tr>
+    <tr>
+      <td><input type="checkbox" id="f5" onchange="salvarCheck(this)"></td>
+      <td><font face="Garamond" color="#e2dfd8" size="4"><label for="f5">Interview With The Vampire (1994)</label></font></td>
+    </tr>
+    <tr>
+      <td><input type="checkbox" id="f6" onchange="salvarCheck(this)"></td>
+      <td><font face="Garamond" color="#e2dfd8" size="4"><label for="f6">Corpse Bride (2005)</label></font></td>
+    </tr>
+    <tr>
+      <td><input type="checkbox" id="f7" onchange="salvarCheck(this)"></td>
+      <td><font face="Garamond" color="#e2dfd8" size="4"><label for="f7">Elvira: Mistress of The Dark (1988)</label></font></td>
+    </tr>
+    <tr>
+      <td><input type="checkbox" id="f8" onchange="salvarCheck(this)"></td>
+      <td><font face="Garamond" color="#e2dfd8" size="4"><label for="f8">Carmilla / The Vampire Lovers (1970)</label></font></td>
+    </tr>
+  </table>
+</form>
+
+<script>
+  function salvarCheck(checkbox) {
+    localStorage.setItem(checkbox.id, checkbox.checked);
+  }
+
+  window.onload = function() {
+    var caixas = document.querySelectorAll('input[type="checkbox"]');
+    caixas.forEach(function(checkbox) {
+      var estadoSalvo = localStorage.getItem(checkbox.id);
+      if (estadoSalvo !== null) {
+        checkbox.checked = (estadoSalvo === 'true');
+      }
+    });
+  };
+</script>
+
+</body>
+
+</html>

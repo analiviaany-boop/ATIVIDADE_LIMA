@@ -1,0 +1,155 @@
+<html>
+<head>
+	<title>Mural das Sombras</title>
+</head>
+
+<body bgcolor="#1a181c">
+
+<font face="Garamond" color="#e2dfd8" size="5">
+
+<h2 align="center"><font face="GothicI" size="6" color="#c5a059">♰ Mural de Visitas da Cripta ♰</font></h2>
+<h4 align="center"><i>Deixe a sua assinatura e a sua mensagem antes de retornar às sombras...</i></h4>
+
+<h2 align="center"><b>⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘</b></h2>
+
+<br>
+
+<!-- Formulário -->
+<form align="center" id="formMural" onsubmit="enviarMensagem(event)">
+  <table border="1" bordercolor="#4a0e17" bgcolor="#0d0d0d" align="center" cellpadding="10" cellspacing="0">
+    <tr>
+      <td align="right"><font face="Garamond" color="#c5a059"><b>Seu Nome / Pseudónimo:</b></font></td>
+      <td align="left">
+        <input type="text" id="nome" size="30" placeholder="Ex: Conde Orlok" required>
+      </td>
+    </tr>
+
+    <tr>
+      <td align="right"><font face="Garamond" color="#c5a059"><b>Filme Favorito da Lista:</b></font></td>
+      <td align="left">
+        <select id="filme">
+          <option value="Drácula de Bram Stoker">Drácula de Bram Stoker (1992)</option>
+          <option value="Nosferatu">Nosferatu (1922)</option>
+          <option value="Sleepy Hollow">Sleepy Hollow (1999)</option>
+          <option value="Crimson Peak">Crimson Peak (2015)</option>
+          <option value="Interview With The Vampire">Interview With The Vampire (1994)</option>
+          <option value="Corpse Bride">Corpse Bride (2005)</option>
+          <option value="Elvira: Mistress of The Dark">Elvira: Mistress of The Dark (1988)</option>
+          <option value="Carmilla">Carmilla / The Vampire Lovers (1970)</option>
+        </select>
+      </td>
+    </tr>
+
+    <tr>
+      <td align="right" valign="top"><font face="Garamond" color="#c5a059"><b>Sua Mensagem das Sombras:</b></font></td>
+      <td align="left">
+        <textarea id="mensagem" rows="5" cols="33" placeholder="Escreva aqui as suas impressões..." required></textarea>
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan="2" align="center">
+        <input type="submit" value="🦇 Enviar para a Cripta" id="btnEnviar">
+        <input type="reset" value="⚰️ Limpar">
+      </td>
+    </tr>
+  </table>
+</form>
+
+<br><br>
+<hr color="#4a0e17" width="60%">
+<br>
+
+<h3 align="center"><font color="#c5a059">Últimas Inscrições no Livro de Visitas</font></h3>
+
+<!-- Área onde as mensagens públicas vão aparecer -->
+<div id="listaMensagens"></div>
+
+<br><br>
+<h2 align="center"><b>⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘⫘</b></h2>
+
+</font>
+
+<script>
+  // COLOQUE A SUA URL DO SHEETBEST AQUI:
+  var apiURL = "https://sheet.best/api/sheets/44416c1c-f982-42d9-9c61-f7a18a21f016";
+
+  // Busca e exibe as mensagens da planilha
+  function buscarMensagens() {
+    var container = document.getElementById("listaMensagens");
+    container.innerHTML = '<p align="center"><font size="4"><i>Invocando as mensagens da cripta...</i></font></p>';
+
+    fetch(apiURL)
+      .then(response => response.json())
+      .then(data => {
+        container.innerHTML = "";
+        
+        if (!data || data.length === 0) {
+          container.innerHTML = '<p align="center"><font size="4"><i>Nenhuma mensagem enviada ainda... Seja o primeiro!</i></font></p>';
+          return;
+        }
+
+        // Mostra as mensagens mais recentes no topo (ordem reversa)
+        data.reverse().forEach(function(m) {
+          var tabela = `
+            <table border="1" bordercolor="#889399" bgcolor="#0d0d0d" align="center" width="60%" cellpadding="8">
+              <tr>
+                <td>
+                  <font face="Garamond" color="#e2dfd8" size="4">
+                    <b>De:</b> ${m.nome} 🦇 | <b>Filme Favorito:</b> <i>${m.filme}</i><br>
+                    <hr color="#4a0e17">
+                    "${m.mensagem}"
+                  </font>
+                </td>
+              </tr>
+            </table><br>
+          `;
+          container.innerHTML += tabela;
+        });
+      })
+      .catch(err => {
+        container.innerHTML = '<p align="center"><font color="red">Erro ao carregar o mural. Tente novamente mais tarde.</font></p>';
+      });
+  }
+
+  // Envia a nova mensagem para o Google Sheets
+  function enviarMensagem(event) {
+    event.preventDefault();
+
+    var btn = document.getElementById("btnEnviar");
+    btn.value = "Enviando...";
+    btn.disabled = true;
+
+    var dados = {
+      nome: document.getElementById("nome").value,
+      filme: document.getElementById("filme").value,
+      mensagem: document.getElementById("mensagem").value
+    };
+
+    fetch(apiURL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(dados)
+    })
+    .then(response => response.json())
+    .then(() => {
+      document.getElementById("formMural").reset();
+      btn.value = "🦇 Enviar para a Cripta";
+      btn.disabled = false;
+      buscarMensagens(); // Atualiza o mural imediatamente!
+    })
+    .catch(err => {
+      alert("Houve um erro ao salvar sua mensagem.");
+      btn.value = "🦇 Enviar para a Cripta";
+      btn.disabled = false;
+    });
+  }
+
+  // Carrega ao abrir a página
+  window.onload = buscarMensagens;
+</script>
+
+</body>
+</html>
